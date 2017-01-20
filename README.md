@@ -3,8 +3,6 @@
 OmniAuth::Strategies::Vatsim is an OmniAuth strategy for authenticating with 
 the VATSIM SSO with OAuth1.
 
-Note: Currently only supports HMAC-SHA1 authentication
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -35,7 +33,45 @@ Or you can pull it directly from github:
 gem 'omniauth-vatsim', git: 'https://github.com/jvoss/omniauth-vatsim.git'
 ```
 
-For a Rails application you can now create an initializer ```config/initializers/omniauth.rb```:
+### RSA-SHA1 (Recommended)
+
+For a Rails application, create an initializer ```config/initializers/omniauth.rb```:
+
+```ruby
+Rails.application.config.middleware.use OmniAuth::Builder do
+  provider :vatsim, 'app_id', nil, 
+     site: 'https://cert.vatsim.net/sso',
+     signature_method: 'RSA-SHA1',
+     private_key: OpenSSL::PKey::RSA.new(IO.read('<PRIVATE KEY FILENAME>'), ENV['key_passphrase'])
+end
+```
+
+For a Rails application using [Devise](https://github.com/plataformatec/devise), modify ```config/initializers/devise.rb```:
+
+```ruby
+config.omniauth :vatsim, 'app_id', nil, 
+  client_options: {
+    site: 'https://cert.vatsim.net/sso',
+    signature_method: 'RSA-SHA1',
+    private_key: OpenSSL::PKey::RSA.new(IO.read('<PRIVATE KEY FILENAME>'), ENV['key_passphrase'])
+  }
+```
+
+For Sinatra you would add:
+
+```ruby
+use Rack::Session::Cookie
+use OmniAuth::Builder do
+  provider :vatsim, 'api_id', nil, 
+    site: 'https://cert.vatsim.net/sso'
+    signature_method: 'RSA-SHA1',
+    private_key: OpenSSL::PKey::RSA.new(IO.read('<PRIVATE KEY FILENAME>'), ENV['key_passphrase'])
+end
+```
+
+### HMAC-SHA1
+
+For a Rails application, create an initializer ```config/initializers/omniauth.rb```:
 
 ```ruby
 Rails.application.config.middleware.use OmniAuth::Builder do
