@@ -3,6 +3,8 @@
 OmniAuth::Strategies::Vatsim is an OmniAuth strategy for authenticating with 
 the VATSIM SSO with OAuth1.
 
+Note: Currently only supports HMAC-SHA1 authentication
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -54,6 +56,58 @@ use Rack::Session::Cookie
 use OmniAuth::Builder do
   provider :vatsim, 'api_id', 'api_secret', site: 'https://cert.vatsim.net/sso'
 end
+```
+
+## Sample Auth Hash
+
+```
+{
+  "provider"=>"vatsim",
+  "uid"=>"1300011",
+  "info"=>{
+    "id"=>"1300011",
+    "name_first"=>"11th",
+    "name_last"=>"Test",
+    "rating"=>{
+      "id"=>"11", 
+      "short"=>"SUP", 
+      "long"=>"Supervisor", 
+      "GRP"=>"Supervisor"
+    },
+    "pilot_rating"=>{
+      "rating"=>"22",
+      "2"=>{
+        "id"=>2, 
+        "short"=>"P2", 
+        "long"=>"Flight Fundamentals"
+      },
+      "4"=>{
+        "id"=>4,
+        "short"=>"P3",
+        "long"=>"VFR Pilot"
+      },
+      "16"=>{
+        "id"=>16, 
+        "short"=>"P5", 
+        "long"=>"Advanced IFR Pilot"
+       }
+     },
+     "email"=>"noreply@vatsim.net",
+     "experience"=>"N",
+     "reg_date"=>"2014-05-14 17:17:26",
+     "country"=>{
+       "code"=>"GB", "name"=>"United Kingdom"
+     },
+     "region"=>{
+       "code"=>"EUR", "name"=>"Europe"
+     },
+     "division"=>{
+       "code"=>"GBR", "name"=>"United Kingdom"
+     },
+     "subdivision"=>{
+       "code"=>nil, "name"=>nil
+     }
+   }
 ```
 
 ## Contributing
