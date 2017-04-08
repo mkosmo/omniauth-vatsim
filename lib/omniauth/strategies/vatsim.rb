@@ -43,7 +43,7 @@ module OmniAuth
       def request_phase
         request_token = consumer.get_request_token({oauth_callback: callback_url}, options.request_params) do |response_body|
           # Debug the response body
-          log :debug, response_body.inspect
+          # log :debug, response_body.inspect
 
           # Log errors
           if MultiJson.decode(response_body)['request']['result'] == 'fail'
