@@ -45,6 +45,11 @@ module OmniAuth
           # Debug the response body
           log :debug, response_body.inspect
 
+          # Log errors
+          if MultiJson.decode(response_body)['request']['result'] == 'fail'
+            log :error, MultiJson.decode(response_body)['request']['result']['message']
+          end
+
           # symbolize string keys returned by VATSIM SSO
           MultiJson.decode(response_body)['token'].symbolize_keys
         end
