@@ -8,6 +8,7 @@ module OmniAuth
 
       option :client_options, {
         site:               'http://sso.hardern.net/server', # default to demo site
+        scheme:             :body,
         authorize_path:     '/auth/pre_login/?',
         request_token_path: '/api/login_token',
         access_token_path:  '/api/login_return',
