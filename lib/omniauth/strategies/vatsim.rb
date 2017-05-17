@@ -8,6 +8,7 @@ module OmniAuth
 
       option :client_options, {
         site:               'http://sso.hardern.net/server', # default to demo site
+        scheme:             :body,
         authorize_path:     '/auth/pre_login/?',
         request_token_path: '/api/login_token',
         access_token_path:  '/api/login_return',
@@ -42,6 +43,14 @@ module OmniAuth
       # Customize the OAuth request phase to handle VATSIM SSO
       def request_phase
         request_token = consumer.get_request_token({oauth_callback: callback_url}, options.request_params) do |response_body|
+          # Debug the response body
+          # log :debug, response_body.inspect
+
+          # Log errors
+          if MultiJson.decode(response_body)['request']['result'] == 'fail'
+            log :error, MultiJson.decode(response_body)['request']['message']
+          end
+
           # symbolize string keys returned by VATSIM SSO
           MultiJson.decode(response_body)['token'].symbolize_keys
         end
